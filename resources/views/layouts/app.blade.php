@@ -9,14 +9,16 @@
   <meta name="description" content="Wieldy - A fully responsive, HTML5 based admin template">
   <meta name="keywords" content="Responsive, HTML5, admin theme, business, professional, jQuery, web design, CSS3, sass">
   <!-- /meta tags -->
-  <title>Wieldy - Admin Dashboard</title>
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>Wieldy - @yield('title')</title>
 
   <!-- Site favicon -->
   <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
   <!-- /site favicon -->
 
   <link rel="stylesheet" href="css/app.css">
-
+  <link rel="stylesheet" href="css/datatables.bundle.css">
+  @stack('stylesheet')
 </head>
 <body class="dt-sidebar--fixed dt-header--fixed">
 
@@ -73,9 +75,15 @@
 <!-- Optional JavaScript -->
 <script src="js/app.js"></script>
 <script src="js/perfect-scrollbar.min.js"></script>
+<script src="js/datatables.bundle.js"></script>
 <!-- /perfect scrollbar jQuery -->
 
 <script src="js/script.js"></script>
-<script src="js/custom/charts/dashboard-crypto.js"></script>
+<script src="js/custom.js"></script>
+{{-- <script src="js/custom/charts/dashboard-crypto.js"></script> --}}
+<script>
+  var _token = "{{ csrf_token() }}";
+</script>
+@stack('script')
 </body>
 </html>

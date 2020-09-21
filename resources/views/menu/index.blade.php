@@ -44,28 +44,41 @@
                 <!-- Card Body -->
                 <div class="dt-card__body">
 
-                    <!-- Tables -->
-                    {{-- <div class="table-responsive"> --}}
-
-                        <table id="dataTable" class="table table-striped table-bordered table-hover">
-                            <thead class="bg-primary">
-                                <tr>
-                                    <th>
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="select_all" onchange="select_all()">
-                                            <label class="custom-control-label" for="select_all"></label>
-                                        </div>
-                                    </th>
-                                    <th>Sl</th>
-                                    <th>Menu Name</th>
-                                    <th>Deletable</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    {{-- </div> --}}
-                    <!-- /tables -->
+                    <form id="form-filter">
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label for="menu_name">Menu Name</label>
+                                <input type="text" class="form-control" name="menu_name" id="menu_name" placeholder="Enter menu name">
+                            </div>
+                            <div class="form-group col-md-8 pt-24">
+                               <button type="button" class="btn btn-danger btn-sm float-right" id="btn-reset"
+                               data-toggle="tooltip" data-placement="top" data-original-title="Reset Data">
+                                   <i class="fas fa-redo-alt"></i>
+                                </button>
+                               <button type="button" class="btn btn-primary btn-sm float-right mr-2" id="btn-filter"
+                               data-toggle="tooltip" data-placement="top" data-original-title="Filter Data">
+                                   <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <table id="dataTable" class="table table-striped table-bordered table-hover">
+                        <thead class="bg-primary">
+                            <tr>
+                                <th>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="select_all" onchange="select_all()">
+                                        <label class="custom-control-label" for="select_all"></label>
+                                    </div>
+                                </th>
+                                <th>Sl</th>
+                                <th>Menu Name</th>
+                                <th>Deletable</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
 
                 </div>
                 <!-- /card body -->
@@ -110,7 +123,8 @@ $(document).ready(function(){
             "url": "{{route('menu.datatable.data')}}",
             "type": "POST",
             "data": function (data) {
-                data._token = _token;
+                data.menu_name = $("#form-filter #menu_name").val();
+                data._token    = _token;
             }
         },
         "columnDefs": [{
@@ -236,7 +250,7 @@ $(document).ready(function(){
                     });
                     $('#store_or_update_modal .modal-title').html(
                         '<i class="fas fa-edit"></i> <span>Edit ' + data.data.menu_name + '</span>');
-                    $('#store_or_update_modal #save-btn').text('update');
+                    $('#store_or_update_modal #save-btn').text('Update');
 
                 },
                 error: function (xhr, ajaxOption, thrownError) {

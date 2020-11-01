@@ -126,8 +126,10 @@ function delete_data(id, url, table, row, name) {
                 if (response.status == "success") {
                     Swal.fire("Deleted", response.message, "success").then(function () {
                         table.row(row).remove().draw(false);
-
                     });
+                }
+                if (response.status == "error") {
+                    Swal.fire('Oops...', response.message, "error");
                 }
             }).fail(function () {
                 Swal.fire('Oops...', "Somthing went wrong with ajax!", "error");
@@ -156,13 +158,17 @@ function bulk_delete(ids,url,table,rows){
                 },
                 dataType: "JSON",
             }).done(function (response) {
-                if (response.status == "success") {
+                
+                if(response.status == "success") {
                     Swal.fire("Deleted", response.message, "success").then(function () {
                         
                         table.rows(rows).remove().draw(false);
                         $('#select_all').prop('checked',false);
                         $('.delete_btn').addClass('d-none');
                     });
+                }
+                if (response.status == "error") {
+                    Swal.fire('Oops...', response.message, "error");
                 }
             }).fail(function () {
                 Swal.fire('Oops...', "Somthing went wrong with ajax!", "error");

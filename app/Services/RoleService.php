@@ -1,6 +1,8 @@
 <?php
 namespace App\Services;
 
+use App\Models\ModuleRole;
+use App\Models\PermissionRole;
 use Illuminate\Http\Request;
 use App\Services\BaseService;
 use App\Repositories\RoleRepository AS Role;
@@ -40,9 +42,9 @@ class RoleService extends BaseService
                 $action = '';
                 $action .= ' <a class="dropdown-item edit_data" href="'.route('role.edit',['id'=>$value->id]).'"><i class="fas fa-edit text-primary"></i> Edit</a>';
                 $action .= ' <a class="dropdown-item view_data" href="'.route('role.view',['id'=>$value->id]).'"><i class="fas fa-eye text-warning"></i> View</a>';
-                if($value->deletable == 1){
+                // if($value->deletable == 1){
                 $action .= ' <a class="dropdown-item delete_data"  data-id="' . $value->id . '" data-name="' . $value->role_name . '"><i class="fas fa-trash text-danger"></i> Delete</a>';
-                }
+                // }
                 $btngroup = '<div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-th-list text-white"></i>
@@ -115,12 +117,51 @@ class RoleService extends BaseService
 
     public function delete(Request $request)
     {
-        return $this->role->delete($request->id);
+        $role = $this->role->find_data_with_module_permission($request->id);
+        if(!$role->users->isEmpty()){
+            $response = 2;
+        }else{
+            $delete_module_role = $role->module_role()->detach();
+            $delete_permission_role = $role->permission_role()->detach();
+            if($delete_module_role && $delete_permission_role){
+                $role->delete();
+                $response = 1;
+            }else{
+                $response = 3;
+            }
+        }
+        return $response;
     }
 
     public function bulk_delete(Request $request)
     {
-        return $this->role->destroy($request->ids);
+        
+        if(!empty($request->ids)){
+            $delete_list = [];
+            $undelete_list = [];
+            foreach ($request->ids as $id) {
+                $role = $this->role->find($id);
+                if(!$role->users->isEmpty()){
+                    array_push($undelete_list,$role->role_name);
+                }else{
+                    array_push($delete_list,$id);
+                }
+            }
+            $message = !empty($undelete_list) ? 'These roles('.implode(',',$undelete_list).') can\'t delete because they are related with many users' : '';   
+            if(!empty($delete_list)){
+                $delete_module_role = ModuleRole::whereIn('role_id',$delete_list)->delete();
+                $delete_permission_role = PermissionRole::whereIn('role_id',$delete_list)->delete();
+                if($delete_module_role && $delete_permission_role){
+                    $this->role->destroy($delete_list);
+                    $response = ['status' => 1,'message'=> $message];
+                }else{
+                    $response = ['status' => 2,'message'=> $message];
+                }
+            }else{
+                $response = ['status' => 3,'message'=> $message];
+            }
+            return $response;
+        }
     }
 
     public function permission_module_list(){

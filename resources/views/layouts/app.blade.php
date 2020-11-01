@@ -35,7 +35,7 @@
 <!-- Root -->
 <div class="dt-root">
   <!-- Header -->
-@include('include.header')
+  @include('include.header')
   <!-- /header -->
 
   <!-- Site Main -->

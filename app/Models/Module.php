@@ -28,5 +28,15 @@ class Module extends Model
                     ->orderBy('order','desc');
     }
 
+    public function submenu(){
+        return $this->hasMany(Module::class,'parent_id','id')
+        ->orderBy('order','asc')
+        ->with('permission:id,module_id,name');
+    }
+
+    public function permission(){
+        return $this->hasMany(Permission::class);
+    }
+
 
 }

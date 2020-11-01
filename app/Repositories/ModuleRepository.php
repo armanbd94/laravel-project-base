@@ -23,4 +23,12 @@ class ModuleRepository extends BaseRepository
         return $modules;
     }
 
+    public function permission_module_list(){
+       return $this->model->doesntHave('parent')
+                ->select('id','type','divider_title','module_name','order')
+                ->orderBy('order','asc')
+                ->with('permission:id,module_id,name','submenu:id,parent_id,module_name')
+                ->get();
+    }
+
 }

@@ -31,9 +31,9 @@
                 </div>
                 <!-- /entry heading -->
 
-                <button class="btn btn-primary btn-sm" onclick="showFormModal('Add New Menu','Save')">
+                <a class="btn btn-primary btn-sm" href="{{ route('role.create') }}">
                    <i class="fas fa-plus-square"></i> Add New
-                </button>
+                </a>
 
             </div>
             <!-- /entry header -->
@@ -47,8 +47,8 @@
                     <form id="form-filter">
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label for="menu_name">Menu Name</label>
-                                <input type="text" class="form-control" name="menu_name" id="menu_name" placeholder="Enter menu name">
+                                <label for="role_name">Role Name</label>
+                                <input type="text" class="form-control" name="role_name" id="role_name" placeholder="Enter role name">
                             </div>
                             <div class="form-group col-md-8 pt-24">
                                <button type="button" class="btn btn-danger btn-sm float-right" id="btn-reset"
@@ -72,7 +72,7 @@
                                     </div>
                                 </th>
                                 <th>Sl</th>
-                                <th>Menu Name</th>
+                                <th>Role Name</th>
                                 <th>Deletable</th>
                                 <th>Action</th>
                             </tr>
@@ -93,7 +93,6 @@
     <!-- /grid -->
 
 </div>
-@include('menu.modal')
 @endsection
 
 @push('script')
@@ -120,10 +119,10 @@ $(document).ready(function(){
             zeroRecords: '<strong class="text-danger">No Data Found</strong>'
         },
         "ajax": {
-            "url": "{{route('menu.datatable.data')}}",
+            "url": "{{route('role.datatable.data')}}",
             "type": "POST",
             "data": function (data) {
-                data.menu_name = $("#form-filter #menu_name").val();
+                data.role_name = $("#form-filter #role_name").val();
                 data._token    = _token;
             }
         },
@@ -149,7 +148,7 @@ $(document).ready(function(){
                 "extend": 'print',
                 'text':'Print',
                 'className':'btn btn-secondary btn-sm text-white',
-                "title": "Menu List",
+                "title": "Role List",
                 "orientation": "landscape", //portrait
                 "pageSize": "A4", //A3,A5,A6,legal,letter
                 "exportOptions": {
@@ -165,8 +164,8 @@ $(document).ready(function(){
                 "extend": 'csv',
                 'text':'CSV',
                 'className':'btn btn-secondary btn-sm text-white',
-                "title": "Menu List",
-                "filename": "menu-list",
+                "title": "Role List",
+                "filename":"role-list",
                 "exportOptions": {
                     columns: function (index, data, node) {
                         return table.column(index).visible();
@@ -177,8 +176,8 @@ $(document).ready(function(){
                 "extend": 'excel',
                 'text':'Excel',
                 'className':'btn btn-secondary btn-sm text-white',
-                "title": "Menu List",
-                "filename": "menu-list",
+                "title":"Role List",
+                "filename": "role-list",
                 "exportOptions": {
                     columns: function (index, data, node) {
                         return table.column(index).visible();
@@ -189,8 +188,8 @@ $(document).ready(function(){
                 "extend": 'pdf',
                 'text':'PDF',
                 'className':'btn btn-secondary btn-sm text-white',
-                "title": "Menu List",
-                "filename": "menu-list",
+                "title": "Role List",
+                "filename": "role-list",
                 "orientation": "landscape", //portrait
                 "pageSize": "A4", //A3,A5,A6,legal,letter
                 "exportOptions": {
@@ -216,59 +215,11 @@ $(document).ready(function(){
         table.ajax.reload();
     });
 
-    $(document).on('click', '#save-btn', function () {
-        let form = document.getElementById('store_or_update_form');
-        let formData = new FormData(form);
-        let url = "{{route('menu.store.or.update')}}";
-        let id = $('#update_id').val();
-        let method;
-        if (id) {
-            method = 'update';
-        } else {
-            method = 'add';
-        }
-        store_or_update_data(table, method, url, formData);
-    });
-
-    $(document).on('click', '.edit_data', function () {
-        let id = $(this).data('id');
-        $('#store_or_update_form')[0].reset();
-        $('#store_or_update_form .select').val('');
-        $('#store_or_update_form').find('.is-invalid').removeClass('is-invalid');
-        $('#store_or_update_form').find('.error').remove();
-        if (id) {
-            $.ajax({
-                url: "{{route('menu.edit')}}",
-                type: "POST",
-                data: { id: id,_token: _token},
-                dataType: "JSON",
-                success: function (data) {
-                    $('#store_or_update_form #update_id').val(data.data.id);
-                    $('#store_or_update_form #menu_name').val(data.data.menu_name);
-                    $('#store_or_update_form #deletable').val(data.data.deletable);
-                    $('#store_or_update_form #deletable.selectpicker').selectpicker('refresh');
-
-                    $('#store_or_update_modal').modal({
-                        keyboard: false,
-                        backdrop: 'static',
-                    });
-                    $('#store_or_update_modal .modal-title').html(
-                        '<i class="fas fa-edit"></i> <span>Edit ' + data.data.menu_name + '</span>');
-                    $('#store_or_update_modal #save-btn').text('Update');
-
-                },
-                error: function (xhr, ajaxOption, thrownError) {
-                    console.log(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText);
-                }
-            });
-        }
-    });
-
     $(document).on('click', '.delete_data', function () {
         let id    = $(this).data('id');
         let name  = $(this).data('name');
         let row   = table.row($(this).parent('tr'));
-        let url   = "{{ route('menu.delete') }}";
+        let url   = "{{ route('role.delete') }}";
         delete_data(id, url, table, row, name);
     });
 
@@ -287,7 +238,7 @@ $(document).ready(function(){
                 icon: 'warning',
             });
         }else{
-            let url = "{{route('menu.bulk.delete')}}";
+            let url = "{{route('role.bulk.delete')}}";
             bulk_delete(ids,url,table,rows);
         }
     }

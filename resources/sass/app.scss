@@ -20,13 +20,35 @@ $fa-font-path: "../webfonts";
 }
 .table th, .table td{padding: 1rem !important;}
 .required label:first-child::after{content:'*';color:#dc3545;}
-.dt-card{height:100vh !important;}
 .swal2-popup.swal2-toast{padding: 1em !important;}
 .swal2-popup.swal2-toast .swal2-title{
     flex-grow: 1;
     justify-content: flex-start;
-    margin: 0 .6rem;
-    font-size: 1.2rem !important;
+}
+
+element {
+
+    display: flex;
+
+}
+.swal2-popup .swal2-title {
+    font-weight: 400;
+}
+.swal2-popup .swal2-title {
+    display: block;
+    position: relative;
+    max-width: 100%;
+    margin: 0 !important;
+    padding: 0;
+    color: #262626;
+    font-size: 1.8rem !important;
+    font-weight: 600;
+    text-align: center;
+    text-transform: none;
+    word-wrap: break-word;
+}
+.swal2-popup .swal2-actions{
+    margin: 0 !important;
 }
 #dataTable .custom-control-input:checked ~ .custom-control-label::before{
     color: #fff !important;

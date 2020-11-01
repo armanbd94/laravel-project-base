@@ -30,6 +30,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('delete', 'MenuController@delete')->name('delete');
         Route::post('bulk-delete', 'MenuController@bulk_delete')->name('bulk.delete');
         Route::post('order/{menu}','MenuController@orderItem')->name('order');
+        
         //Module Routes
         Route::get('builder/{id}','ModuleController@index')->name('builder');
         Route::group(['prefix' => 'module', 'as'=>'module.'], function () {
@@ -38,6 +39,7 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('{menu}/edit/{module}','ModuleController@edit')->name('edit');
             Route::delete('delete/{module}','ModuleController@destroy')->name('delete');
 
+            //Permission Routes
             Route::get('permission', 'PermissionController@index')->name('permission');
             Route::group(['prefix' => 'menu', 'as'=>'permission.'], function () {
                 Route::post('datatable-data', 'PermissionController@get_datatable_data')->name('datatable.data');
@@ -50,6 +52,19 @@ Route::group(['middleware' => ['auth']], function () {
 
         });
     });
+
+    Route::get('role', 'RoleController@index')->name('role');
+    Route::group(['prefix' => 'role', 'as'=>'role.'], function () {
+        Route::get('create', 'RoleController@create')->name('create');
+        Route::post('datatable-data', 'RoleController@get_datatable_data')->name('datatable.data');
+        Route::post('store-or-update', 'RoleController@store_or_update_data')->name('store.or.update');
+        Route::get('edit/{id}', 'RoleController@edit')->name('edit');
+        Route::get('view/{id}', 'RoleController@show')->name('view');
+        Route::post('delete', 'RoleController@delete')->name('delete');
+        Route::post('bulk-delete', 'RoleController@bulk_delete')->name('bulk.delete');
+    });
+
+
 
     
 });

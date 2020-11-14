@@ -79,7 +79,7 @@ class MenuService extends BaseService{
     {
         $collection = collect($request->validated());
         $created_at = $updated_at = Carbon::now();
-        if($request->updated_id){
+        if($request->update_id){
             $collection = $collection->merge(compact('updated_at'));
         }else{
             $collection = $collection->merge(compact('created_at'));

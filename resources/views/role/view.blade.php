@@ -31,9 +31,9 @@
                 </div>
                 <!-- /entry heading -->
 
-                <button class="btn btn-danger btn-sm" href="{{ route('role') }}">
+                <a type="button" class="btn btn-danger btn-sm" href="{{ route('role') }}">
                    <i class="fas fa-arrow-circle-left"></i> Back
-                </button>
+                </a>
 
             </div>
             <!-- /entry header -->

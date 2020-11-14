@@ -53,6 +53,7 @@ Route::group(['middleware' => ['auth']], function () {
         });
     });
 
+    //Role Routes
     Route::get('role', 'RoleController@index')->name('role');
     Route::group(['prefix' => 'role', 'as'=>'role.'], function () {
         Route::get('create', 'RoleController@create')->name('create');
@@ -62,6 +63,18 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('view/{id}', 'RoleController@show')->name('view');
         Route::post('delete', 'RoleController@delete')->name('delete');
         Route::post('bulk-delete', 'RoleController@bulk_delete')->name('bulk.delete');
+    });
+
+    //User Routes
+    Route::get('user','UserController@index')->name('menu');
+    Route::group(['prefix' => 'user', 'as'=>'user.'], function () {
+        Route::post('datatable-data', 'UserController@get_datatable_data')->name('datatable.data');
+        Route::post('store-or-update', 'UserController@store_or_update_data')->name('store.or.update');
+        Route::post('edit', 'UserController@edit')->name('edit');
+        Route::post('show', 'UserController@show')->name('show');
+        Route::post('delete', 'UserController@delete')->name('delete');
+        Route::post('bulk-delete', 'UserController@bulk_delete')->name('bulk.delete');
+        Route::post('change-status', 'UserController@change_status')->name('change.status');
     });
 
 

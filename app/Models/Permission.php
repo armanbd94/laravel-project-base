@@ -17,4 +17,10 @@ class Permission extends Model
     {
         return $this->belongsTo(Module::class);
     }
+
+    public function permission_role(){
+        return $this->hasMany(PermissionRole::class);
+    }
+
+    
 }

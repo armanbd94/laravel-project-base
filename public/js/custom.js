@@ -176,3 +176,5 @@ function bulk_delete(ids,url,table,rows){
         }
     });
 }
+
+

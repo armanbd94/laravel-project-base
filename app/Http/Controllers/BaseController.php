@@ -39,4 +39,9 @@ class BaseController extends Controller
             'response_code' => $response_code,
         ]);
     }
+
+    protected function unauthorized_access_blocked()
+    {
+        return redirect('unauthorized');
+    }
 }

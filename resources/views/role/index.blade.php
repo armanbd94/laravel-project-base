@@ -30,11 +30,11 @@
                     <h2 class="dt-page__title mb-0 text-primary"><i class="{{ $page_icon }}"></i> {{ $sub_title }}</h2>
                 </div>
                 <!-- /entry heading -->
-
+                @if (permission('role-add'))
                 <a class="btn btn-primary btn-sm" href="{{ route('role.create') }}">
-                   <i class="fas fa-plus-square"></i> Add New
+                    <i class="fas fa-plus-square"></i> Add New
                 </a>
-
+                @endif
             </div>
             <!-- /entry header -->
 
@@ -65,12 +65,14 @@
                     <table id="dataTable" class="table table-striped table-bordered table-hover">
                         <thead class="bg-primary">
                             <tr>
+                                @if (permission('role-bulk-delete'))
                                 <th>
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="select_all" onchange="select_all()">
                                         <label class="custom-control-label" for="select_all"></label>
                                     </div>
                                 </th>
+                                @endif
                                 <th>Sl</th>
                                 <th>Role Name</th>
                                 <th>Deletable</th>
@@ -127,12 +129,20 @@ $(document).ready(function(){
             }
         },
         "columnDefs": [{
+                @if (permission('role-bulk-delete'))
                 "targets": [0,4],
+                @else 
+                "targets": [3],
+                @endif
                 "orderable": false,
                 "className": "text-center"
             },
             {
+                @if (permission('role-bulk-delete'))
                 "targets": [1,3],
+                @else 
+                "targets": [0,2],
+                @endif
                 "className": "text-center"
             }
         ],
@@ -141,6 +151,7 @@ $(document).ready(function(){
             "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'<'float-right'p>>>",
 
         "buttons": [
+            @if (permission('role-report'))
             {
                 'extend':'colvis','className':'btn btn-secondary btn-sm text-white','text':'Column'
             },
@@ -196,6 +207,8 @@ $(document).ready(function(){
                     columns: [1, 2, 3]
                 },
             },
+            @endif 
+            @if (permission('role-bulk-delete'))
             {
                 'className':'btn btn-danger btn-sm delete_btn d-none text-white',
                 'text':'Delete',
@@ -203,6 +216,7 @@ $(document).ready(function(){
                     multi_delete();
                 }
             }
+            @endif
         ],
     });
 

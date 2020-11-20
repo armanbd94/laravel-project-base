@@ -30,9 +30,11 @@
                     <a class="btn btn-danger btn-sm" href="{{ route('menu') }}">
                     <i class="fas fa-arrow-circle-left"></i> Back
                     </a>
+                    @if(permission('menu-builder'))
                     <a class="btn btn-primary btn-sm" href="{{ route('menu.module.create', ['menu'=>$data['menu']->id]) }}">
                     <i class="fas fa-plus-square"></i> Add New
                     </a>
+                    @endif
                 </div>
             </div>
             <!-- /entry header -->

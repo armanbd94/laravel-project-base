@@ -16,21 +16,30 @@ class ModuleController extends BaseController
 
     public function index(int $id)
     {
-        $this->setPageData('Menu Builder','Menu Builder','fas fa-th-list');
-        $data = $this->service->index($id);
-        return view('module.index',compact('data'));
+        if(permission('menu-builder')){
+            $this->setPageData('Menu Builder','Menu Builder','fas fa-th-list');
+            $data = $this->service->index($id);
+            return view('module.index',compact('data'));
+        }else{
+            return $this->unauthorized_access_blocked();
+        }
     }
 
     public function create($menu)
     {
-        $this->setPageData('Create Menu Module','Add Menu Module','fas fa-th-list');
-        $data = $this->service->index($menu);
-        return view('module.form',compact('data'));
+        if(permission('menu-module-add')){
+            $this->setPageData('Create Menu Module','Add Menu Module','fas fa-th-list');
+            $data = $this->service->index($menu);
+            return view('module.form',compact('data'));
+        }else{
+            return $this->unauthorized_access_blocked();
+        }
     }
 
     public function storeOrUpdate(ModuleRequest $request)
     {
-        $result = $this->service->store_or_update_data($request);
+        if(permission('menu-module-add') || permission('menu-module-edit')){
+            $result = $this->service->store_or_update_data($request);
             if($result){
                 if($request->update_id){
                     session()->flash('success','Module Updated Successfully');
@@ -47,23 +56,34 @@ class ModuleController extends BaseController
                 }
                 return back();
             }
+        }else{
+            return $this->unauthorized_access_blocked();
+        }
     }
 
     public function edit($menu,$module)
     {
-        $this->setPageData('Update Menu Module','Update Menu Module','fas fa-th-list');
-        $data = $this->service->edit($menu,$module);
-        return view('module.form',compact('data'));
+        if(permission('menu-module-edit')){
+            $this->setPageData('Update Menu Module','Update Menu Module','fas fa-th-list');
+            $data = $this->service->edit($menu,$module);
+            return view('module.form',compact('data'));
+        }else{
+            return $this->unauthorized_access_blocked();
+        }
     }
 
     public function destroy($module)
     {
-        $result = $this->service->delete($module);
-        if($result){
-            session()->flash('success','Module Deleted Successfully');
+        if(permission('menu-module-delete')){
+            $result = $this->service->delete($module);
+            if($result){
+                session()->flash('success','Module Deleted Successfully');
+            }else{
+                session()->flash('success','Module Failed to Delete');
+            }
+            return redirect()->back();
         }else{
-            session()->flash('success','Module Failed to Delete');
+            return $this->unauthorized_access_blocked();
         }
-        return redirect()->back();
     }
 }

@@ -26,11 +26,11 @@
                     <h2 class="dt-page__title mb-0 text-primary"><i class="{{ $page_icon }}"></i> {{ $sub_title }}</h2>
                 </div>
                 <!-- /entry heading -->
-
+                @if (permission('user-add'))
                 <button class="btn btn-primary btn-sm" onclick="showUserFormModal('Add New User','Save')">
                    <i class="fas fa-plus-square"></i> Add New
                 </button>
-
+                @endif
             </div>
             <!-- /entry header -->
 
@@ -69,12 +69,14 @@
                     <table id="dataTable" class="table table-striped table-bordered table-hover">
                         <thead class="bg-primary">
                             <tr>
+                                @if (permission('user-bulk-delete'))
                                 <th>
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="select_all" onchange="select_all()">
                                         <label class="custom-control-label" for="select_all"></label>
                                     </div>
                                 </th>
+                                @endif
                                 <th>Sl</th>
                                 <th>Avatar</th>
                                 <th>Name</th>
@@ -142,12 +144,21 @@ $(document).ready(function(){
             }
         },
         "columnDefs": [{
+                @if (permission('user-bulk-delete'))
                 "targets": [0,9],
+                @else 
+                "targets": [8],
+                @endif
                 "orderable": false,
                 "className": "text-center"
             },
             {
-                "targets": [1,2,4,6,7,8],
+                @if (permission('user-bulk-delete'))
+                "targets": [1,2,3,4,6,7,8],
+                @else 
+                "targets": [0,1,2,3,6,7,8],
+                @endif
+                
                 "className": "text-center"
             }
         ],
@@ -156,6 +167,7 @@ $(document).ready(function(){
             "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'<'float-right'p>>>",
 
         "buttons": [
+            @if (permission('user-report'))
             {
                 'extend':'colvis','className':'btn btn-secondary btn-sm text-white','text':'Column'
             },
@@ -213,6 +225,8 @@ $(document).ready(function(){
                     }
                 },
             },
+            @endif 
+            @if (permission('user-bulk-delete'))
             {
                 'className':'btn btn-danger btn-sm delete_btn d-none text-white',
                 'text':'Delete',
@@ -220,6 +234,7 @@ $(document).ready(function(){
                     multi_delete();
                 }
             }
+            @endif
         ],
     });
 

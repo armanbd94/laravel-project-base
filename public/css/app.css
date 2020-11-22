@@ -20535,7 +20535,7 @@ a:focus {
 }
 
 .tabs-vertical .tab-content {
-    overflow: hidden
+    overflow: auto;
 }
 
 .tabs-vertical .nav-tabs>li>a {

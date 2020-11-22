@@ -16,8 +16,8 @@
         <!-- Brand logo -->
         <span class="dt-brand__logo">
         <a class="dt-brand__logo-link" href="index.html">
-          <img class="dt-brand__logo-img d-none d-lg-inline-block" src="images/logo.png" alt="Wieldy">
-          <img class="dt-brand__logo-symbol d-lg-none" src="images/logo-symbol.png" alt="Wieldy">
+          <img class="dt-brand__logo-img d-none d-lg-inline-block" src="{{ 'storage/'.LOGO_PATH.config('settings.logo') }}" alt="Wieldy">
+          <img class="dt-brand__logo-symbol d-lg-none" src="{{ 'storage/'.LOGO_PATH.config('settings.logo') }}" alt="Wieldy">
         </a>
       </span>
         <!-- /brand logo -->

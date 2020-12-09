@@ -55,31 +55,15 @@ class RoleService extends BaseService
                         $action .= ' <a class="dropdown-item delete_data"  data-id="' . $value->id . '" data-name="' . $value->role_name . '"><i class="fas fa-trash text-danger"></i> Delete</a>';
                     }
                 }
-                $btngroup = '<div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-th-list text-white"></i>
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                ' . $action . '
-                </div>
-              </div>';
 
                 $row = [];
                 if (permission('role-bulk-delete')) {
-                    if($value->deletable == 1){
-                    $row[] = '<div class="custom-control custom-checkbox">
-                                <input type="checkbox" value="'.$value->id.'"
-                                class="custom-control-input select_data" onchange="select_single_item('.$value->id.')" id="checkbox'.$value->id.'">
-                                <label class="custom-control-label" for="checkbox'.$value->id.'"></label>
-                            </div>';
-                    }else{
-                        $row[] = '';
-                    }
+                    $row[] = ($value->deletable == 1) ? table_checkbox($value->id) : '';
                 }
                 $row[] = $no;
                 $row[] = $value->role_name;
                 $row[] = DELETABLE[$value->deletable];
-                $row[] = $btngroup;
+                $row[] = action_button($action);
                 $data[] = $row;
             }
             return $this->datatable_draw($request->input('draw'),$this->role->count_all(),

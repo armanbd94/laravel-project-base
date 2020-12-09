@@ -1,11 +1,12 @@
 <?php
 namespace App\Services;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Services\BaseService;
-use App\Repositories\ModuleRepository AS Module;
+use Illuminate\Support\Facades\Session;
 use App\Repositories\MenuRepository AS Menu;
-use Carbon\Carbon;
+use App\Repositories\ModuleRepository AS Module;
 
 class ModuleService extends BaseService{
 
@@ -34,7 +35,13 @@ class ModuleService extends BaseService{
             $collection = $collection->merge(compact('menu_id','created_at'));
         }
 
-        return $this->module->updateOrCreate(['id'=>$request->update_id],$collection->all());
+        $result =  $this->module->updateOrCreate(['id'=>$request->update_id],$collection->all());
+        if($result){
+            if(auth()->user()->role_id == 1){
+                $this->restore_session_module();
+            }
+        }
+        return $result;
     }
 
     public function edit($menu,$module){
@@ -45,8 +52,26 @@ class ModuleService extends BaseService{
 
     public function delete($module)
     {
-        return $this->module->delete($module);
+        $result =  $this->module->delete($module);
+        if($result){
+            if(auth()->user()->role_id == 1){
+                $this->restore_session_module();
+            }
+        }
+        return $result;
     }
 
 
+    public function restore_session_module(){
+        $modules = $this->module->session_module_list();
+
+        if(!$modules->isEmpty())
+        {
+            Session::forget('menu');
+            Session::put('menu',$modules);
+            return true;
+        }
+        return false;
+
+    }
 }

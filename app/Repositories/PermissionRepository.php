@@ -75,5 +75,8 @@ class PermissionRepository extends BaseRepository
         return $this->model->toBase()->get()->count();
     }
 
-
+    public function session_permission_list()
+    {
+        return $this->model->select('slug')->get();
+    }
 }

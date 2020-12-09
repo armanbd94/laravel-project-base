@@ -4,15 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\MenuService;
+use App\Services\ModuleService;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\MenuRequest;
 
 class MenuController extends BaseController
 {
-
-    public function __construct(MenuService $menu)
+    protected $module;
+    public function __construct(MenuService $menu,ModuleService $module)
     {
         $this->service = $menu;
+        $this->module = $module;
     }
 
     public function index()
@@ -114,5 +116,6 @@ class MenuController extends BaseController
     public function orderItem(Request $request){
         $menuItemOrder = json_decode($request->input('order'));
         $this->service->orderMenu($menuItemOrder, null);
+        $this->module->restore_session_module();
     }
 }

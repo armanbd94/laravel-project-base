@@ -2,11 +2,12 @@
 namespace App\Services;
 
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Services\BaseService;
-use App\Repositories\PermissionRepository AS Permission;
+use Illuminate\Support\Facades\Session;
 use App\Repositories\ModuleRepository AS Module;
-use Carbon\Carbon;
+use App\Repositories\PermissionRepository AS Permission;
 
 class PermissionService extends BaseService{
 
@@ -54,28 +55,16 @@ class PermissionService extends BaseService{
                 if (permission('permission-delete')) {
                 $action .= ' <a class="dropdown-item delete_data"  data-id="' . $value->id . '" data-name="' . $value->menu_name . '"><i class="fas fa-trash text-danger"></i> Delete</a>';
                 }
-                $btngroup = '<div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-th-list text-white"></i>
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                ' . $action . '
-                </div>
-              </div>';
 
                 $row = [];
                 if (permission('permission-bulk-delete')) {
-                $row[] = '<div class="custom-control custom-checkbox">
-                            <input type="checkbox" value="'.$value->id.'"
-                            class="custom-control-input select_data" onchange="select_single_item('.$value->id.')" id="checkbox'.$value->id.'">
-                            <label class="custom-control-label" for="checkbox'.$value->id.'"></label>
-                        </div>';
+                $row[] = table_checkbox($value->id);
                 }
                 $row[] = $no;
                 $row[] = $value->module->module_name;
                 $row[] = $value->name;
                 $row[] = $value->slug;
-                $row[] = $btngroup;
+                $row[] = action_button($action);
                 $data[] = $row;
             }
             return $this->datatable_draw($request->input('draw'),$this->permission->count_all(),
@@ -119,6 +108,23 @@ class PermissionService extends BaseService{
     public function bulk_delete(Request $request)
     {
         return $this->permission->destroy($request->ids);
+    }
+
+    public function restore_session_permission_list(){
+        $permissions = $this->permission->session_permission_list();
+
+        $permission = [];
+        if(!$permissions->isEmpty())
+        {
+            foreach ($permission as $value) {
+                array_push($permission,$value->slug);
+            }
+
+            Session::forget('permission');
+            Session::put('permission',$permission);
+            return true;
+        }
+        return false;
     }
 
     

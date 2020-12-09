@@ -31,4 +31,10 @@ class ModuleRepository extends BaseRepository
                 ->get();
     }
 
+    public function session_module_list(){
+        return $this->model->doesntHave('parent')
+        ->orderBy('order','asc')
+        ->with('children')->get();
+    }
+
 }
